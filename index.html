@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subject PYQ Viewer</title>
+    <style>
+        /* Reset margins and set up a full-screen layout */
+        body {
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #eaeaea;
+        }
+
+        /* Sidebar styling */
+        #sidebar {
+            width: 280px;
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            box-sizing: border-box;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+
+        #sidebar h2 {
+            margin-top: 0;
+            font-size: 20px;
+            border-bottom: 1px solid #34495e;
+            padding-bottom: 10px;
+        }
+
+        /* Dropdown menu styling */
+        select {
+            width: 100%;
+            padding: 10px;
+            font-size: 15px;
+            border: none;
+            border-radius: 4px;
+            background-color: #ecf0f1;
+            color: #333;
+            cursor: pointer;
+            outline: none;
+        }
+        
+        /* Style for the category headers inside the dropdown */
+        optgroup {
+            font-weight: bold;
+            color: #2c3e50;
+            background-color: #bdc3c7;
+        }
+
+        option {
+            background-color: #ecf0f1;
+            color: #333;
+        }
+
+        /* Main content area */
+        #content {
+            flex-grow: 1;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Iframe styling to fill the screen */
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background-color: #fff;
+        }
+
+        /* Placeholder text */
+        #placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #7f8c8d;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="sidebar">
+        <h2>PYQ Materials</h2>
+        <select id="pdfSelector" onchange="changePDF()">
+            <option value="" disabled selected>Select a PYQ...</option>
+            
+            <optgroup label="Applied Maths">
+                <option value="AppliedMaths_PYQ1.pdf">PYQ 1</option>
+                <option value="AppliedMaths_PYQ2.pdf">PYQ 2</option>
+                <option value="AppliedMaths_PYQ3.pdf">PYQ 3</option>
+            </optgroup>
+            
+            <optgroup label="DSA">
+                <option value="DSA_PYQ1.pdf">PYQ 1</option>
+                <option value="DSA_PYQ2.pdf">PYQ 2</option>
+                <option value="DSA_PYQ3.pdf">PYQ 3</option>
+            </optgroup>
+
+            <optgroup label="DBMS">
+                <option value="DBMS_PYQ1.pdf">PYQ 1</option>
+                <option value="DBMS_PYQ2.pdf">PYQ 2</option>
+                <option value="DBMS_PYQ3.pdf">PYQ 3</option>
+                <option value="DBMS_PYQ4.pdf">PYQ 4</option>
+            </optgroup>
+
+            <optgroup label="WBP">
+                <option value="WBP_PYQ1.pdf">PYQ 1</option>
+                <option value="WBP_PYQ2.pdf">PYQ 2</option>
+                <option value="WBP_PYQ3.pdf">PYQ 3</option>
+            </optgroup>
+
+            <optgroup label="EVS">
+                <option value="EVS_PYQ1.pdf">PYQ 1</option>
+                <option value="EVS_PYQ2.pdf">PYQ 2</option>
+                <option value="EVS_PYQ3.pdf">PYQ 3</option>
+            </optgroup>
+        </select>
+    </div>
+
+    <div id="content">
+        <div id="placeholder">Please select a PYQ from the menu on the left.</div>
+        <iframe id="pdfFrame" src="" style="display: none;"></iframe>
+    </div>
+
+    <script>
+        // JavaScript to handle the dropdown selection
+        function changePDF() {
+            const selector = document.getElementById('pdfSelector');
+            const iframe = document.getElementById('pdfFrame');
+            const placeholder = document.getElementById('placeholder');
+            
+            // Get the selected file path
+            const selectedFile = selector.value;
+
+            if (selectedFile) {
+                // Hide placeholder, show iframe, and load the PDF
+                placeholder.style.display = 'none';
+                iframe.style.display = 'block';
+                iframe.src = selectedFile;
+            }
+        }
+    </script>
+</body>
+</html>
