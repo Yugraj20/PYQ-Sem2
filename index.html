@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Subject PYQ Viewer - App Edition</title>
+    <title>Subject PYQ Viewer - By Yugraj</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -57,6 +57,20 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             letter-spacing: -0.02em;
+        }
+
+        /* Top Right Attribution */
+        .attribution {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            opacity: 0.9;
+        }
+
+        .heart {
+            color: #ef4444; /* explicitly red */
+            font-size: 1rem;
+            margin: 0 2px;
         }
 
         /* Content Area */
@@ -292,13 +306,14 @@
 
         /* Responsive */
         @media (max-width: 768px) {
-            header { padding: 1rem 1.5rem; }
+            header { padding: 1rem 1.5rem; flex-direction: column; gap: 0.5rem; }
             #content { padding: 1.5rem; }
             h1 { font-size: 1.5rem; }
             #subjectGrid { gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); }
             .intro-text h3 { font-size: 1.6rem; }
             .icon-box { font-size: 2.5rem; }
             .btn-shine { margin-bottom: 1.5rem; }
+            .attribution { font-size: 0.8rem; }
         }
     </style>
 </head>
@@ -306,6 +321,7 @@
 
     <header>
         <h1>🎓 PYQ Viewer</h1>
+        <div class="attribution">Made With <span class="heart">❤️</span> By Yugraj</div>
     </header>
 
     <div id="content">
