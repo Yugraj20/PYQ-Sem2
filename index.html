@@ -3,148 +3,446 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Subject PYQ Viewer</title>
+    <title>Subject PYQ Viewer - App Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Reset margins and set up a full-screen layout */
-        body {
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            --card-bg: rgba(15, 15, 35, 0.85);
+            --card-border: 1px solid rgba(59, 130, 246, 0.2);
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            --shadow-hover: 0 30px 60px rgba(0, 0, 0, 0.6);
+            --border-radius: 16px;
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --shine-color: #3b82f6; /* Blue glow */
+        }
+
+        * {
             margin: 0;
-            display: flex;
-            height: 100vh;
-            font-family: Arial, sans-serif;
-            background-color: #eaeaea;
-        }
-
-        /* Sidebar styling */
-        #sidebar {
-            width: 280px;
-            background-color: #2c3e50;
-            color: white;
-            padding: 20px;
+            padding: 0;
             box-sizing: border-box;
-            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
         }
 
-        #sidebar h2 {
-            margin-top: 0;
-            font-size: 20px;
-            border-bottom: 1px solid #34495e;
-            padding-bottom: 10px;
-        }
-
-        /* Dropdown menu styling */
-        select {
-            width: 100%;
-            padding: 10px;
-            font-size: 15px;
-            border: none;
-            border-radius: 4px;
-            background-color: #ecf0f1;
-            color: #333;
-            cursor: pointer;
-            outline: none;
-        }
-        
-        /* Style for the category headers inside the dropdown */
-        optgroup {
-            font-weight: bold;
-            color: #2c3e50;
-            background-color: #bdc3c7;
-        }
-
-        option {
-            background-color: #ecf0f1;
-            color: #333;
-        }
-
-        /* Main content area */
-        #content {
-            flex-grow: 1;
+        body {
+            font-family: 'Inter', sans-serif;
             height: 100vh;
+            background: var(--bg-gradient);
             display: flex;
             flex-direction: column;
+            overflow: hidden;
+            color: var(--text-primary);
         }
 
-        /* Iframe styling to fill the screen */
-        iframe {
+        /* Header */
+        header {
+            position: relative;
+            z-index: 100;
+            background: rgba(15, 15, 35, 0.95);
+            backdrop-filter: blur(25px);
+            border-bottom: var(--card-border);
+            padding: 1rem 2.5rem;
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
+        }
+
+        /* Content Area */
+        #content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+            position: relative;
+        }
+
+        /* App Grid / Paper Grid Container */
+        #appDrawer, #paperGridContainer {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-y: auto;
+            display: none; /* Hidden by default */
+        }
+
+        /* Active screen is flexed and animated in */
+        #appDrawer.active, #paperGridContainer.active {
+            display: flex;
+            animation: slideIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        @keyframes slideIn {
+            0% { opacity: 0; transform: translateY(40px) scale(0.9); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* Shining Button Class (for Back buttons) */
+        .btn-shine {
+            padding: 1rem 2rem;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid rgba(59, 130, 246, 0.5);
+            background: rgba(59, 130, 246, 0.1);
+            position: relative;
+            overflow: hidden;
+            font-size: 1rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.2);
+            margin-bottom: 2rem;
+        }
+
+        /* Shining Border Effect for Buttons (linear-gradient animation) */
+        .btn-shine::before {
+            content: '';
+            position: absolute;
+            top: -2px; left: -2px; bottom: -2px; right: -2px;
+            z-index: -1;
+            border-radius: var(--border-radius);
+            background: linear-gradient(90deg, #3b82f6, #1e40af, #3b82f6);
+            background-size: 200% auto;
+            filter: blur(5px);
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+            animation: shineBorder 2s linear infinite;
+        }
+
+        .btn-shine:hover {
+            box-shadow: 0 0 25px rgba(59, 130, 246, 0.6), 0 0 10px rgba(59, 130, 246, 0.4);
+            transform: translateY(-4px) scale(1.02);
+            border-color: rgba(59, 130, 246, 0.8);
+        }
+
+        /* Introduction/Placeholder Text */
+        .intro-text {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            max-width: 500px;
+        }
+
+        .intro-text h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            background: linear-gradient(135deg, var(--text-primary) 0%, #e2e8f0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .intro-text p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Subject App Grid (Android style) */
+        #subjectGrid, #paperGrid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 2rem;
             width: 100%;
-            height: 100%;
-            border: none;
-            background-color: #fff;
+            max-width: 1000px;
         }
 
-        /* Placeholder text */
-        #placeholder {
+        /* App Card Styling (with intense, multi-layer shining borders) */
+        .app-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border: var(--card-border);
+            aspect-ratio: 1; /* Keep them square like app icons */
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.2);
+            position: relative;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        /* Advanced shining borders (multi-layer, pulsating glow) */
+        .app-card {
+            /* Base blue pulse */
+            animation: shineBorder 4s infinite alternate;
+        }
+
+        .app-card:hover {
+            /* Intense shine on hover */
+            animation: none;
+            box-shadow: 
+                0 0 25px rgba(59, 130, 246, 0.7), /* Core glow */
+                0 0 10px rgba(59, 130, 246, 0.5), /* Inner edge */
+                0 0 5px var(--shine-color) inset; /* Inner light */
+            border-color: rgba(59, 130, 246, 0.8);
+            transform: translateY(-8px) scale(1.04);
+        }
+
+        /* Shine Border Animation keyframe */
+        @keyframes shineBorder {
+            0% {
+                box-shadow: 0 5px 15px rgba(59, 130, 246, 0.2);
+                border-color: rgba(59, 130, 246, 0.2);
+            }
+            100% {
+                box-shadow: 0 5px 20px rgba(59, 130, 246, 0.4);
+                border-color: rgba(59, 130, 246, 0.5);
+            }
+        }
+
+        /* App Icon styled box */
+        .icon-box {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(30, 64, 175, 0.2) 100%);
+            border-radius: 12px;
+            padding: 1rem;
+            border: 1px solid rgba(59, 130, 246, 0.3);
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 100%;
-            color: #7f8c8d;
-            font-size: 1.2rem;
+            transition: var(--transition);
+        }
+
+        .app-card:hover .icon-box {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.4) 0%, rgba(30, 64, 175, 0.4) 100%);
+            border-color: rgba(59, 130, 246, 0.6);
+            transform: rotate(5deg);
+        }
+
+        .app-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            line-height: 1.3;
+            max-width: 100%;
+        }
+
+        /* Paper Grid specific card (rectangular) */
+        .paper-card {
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+            border: var(--card-border);
+            text-decoration: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: var(--transition);
+            background: rgba(15, 15, 35, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            animation: shineBorder 4s infinite alternate;
+        }
+
+        .paper-card:hover {
+            animation: none;
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 
+                0 0 20px rgba(59, 130, 246, 0.5),
+                0 0 8px rgba(59, 130, 246, 0.3);
+            border-color: rgba(59, 130, 246, 0.6);
+            background: rgba(15, 15, 35, 0.9);
+        }
+
+        /* Iframe and Back to Papers container */
+        #iframeContainer {
+            flex: 1;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        #iframeContainer.active {
+            display: flex;
+        }
+
+        iframe {
+            flex: 1;
+            width: 100%;
+            border: none;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            transform: scale(1);
+            transition: transform 0.3s ease;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header { padding: 1rem 1.5rem; }
+            #content { padding: 1.5rem; }
+            h1 { font-size: 1.5rem; }
+            #subjectGrid { gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); }
+            .intro-text h3 { font-size: 1.6rem; }
+            .icon-box { font-size: 2.5rem; }
+            .btn-shine { margin-bottom: 1.5rem; }
         }
     </style>
 </head>
 <body>
 
-    <div id="sidebar">
-        <h2>PYQ Materials</h2>
-        <select id="pdfSelector" onchange="changePDF()">
-            <option value="" disabled selected>Select a PYQ...</option>
-            
-            <optgroup label="Applied Maths">
-                <option value="AppliedMaths_PYQ1.pdf">PYQ 1</option>
-                <option value="AppliedMaths_PYQ2.pdf">PYQ 2</option>
-                <option value="AppliedMaths_PYQ3.pdf">PYQ 3</option>
-            </optgroup>
-            
-            <optgroup label="DSA">
-                <option value="DSA_PYQ1.pdf">PYQ 1</option>
-                <option value="DSA_PYQ2.pdf">PYQ 2</option>
-                <option value="DSA_PYQ3.pdf">PYQ 3</option>
-            </optgroup>
-
-            <optgroup label="DBMS">
-                <option value="DBMS_PYQ1.pdf">PYQ 1</option>
-                <option value="DBMS_PYQ2.pdf">PYQ 2</option>
-                <option value="DBMS_PYQ3.pdf">PYQ 3</option>
-                <option value="DBMS_PYQ4.pdf">PYQ 4</option>
-            </optgroup>
-
-            <optgroup label="WBP">
-                <option value="WBP_PYQ1.pdf">PYQ 1</option>
-                <option value="WBP_PYQ2.pdf">PYQ 2</option>
-                <option value="WBP_PYQ3.pdf">PYQ 3</option>
-            </optgroup>
-
-            <optgroup label="EVS">
-                <option value="EVS_PYQ1.pdf">PYQ 1</option>
-                <option value="EVS_PYQ2.pdf">PYQ 2</option>
-                <option value="EVS_PYQ3.pdf">PYQ 3</option>
-            </optgroup>
-        </select>
-    </div>
+    <header>
+        <h1>🎓 PYQ Viewer</h1>
+    </header>
 
     <div id="content">
-        <div id="placeholder">Please select a PYQ from the menu on the left.</div>
-        <iframe id="pdfFrame" src="" style="display: none;"></iframe>
+        <div id="appDrawer" class="active">
+            <div class="intro-text">
+                <h3>Welcome</h3>
+                <p>Choose a subject below to view its previous year question papers and begin your preparation journey.</p>
+            </div>
+            <div id="subjectGrid">
+                </div>
+        </div>
+
+        <div id="paperGridContainer">
+            <button class="btn-shine" onclick="goBackToSubjects()">← Back to Subjects</button>
+            <div id="paperGrid">
+                </div>
+        </div>
+
+        <div id="iframeContainer">
+            <button class="btn-shine" onclick="goBackToPapers()">← Back to Paper List</button>
+            <iframe id="pdfFrame" allowfullscreen></iframe>
+        </div>
     </div>
 
     <script>
-        // JavaScript to handle the dropdown selection
-        function changePDF() {
-            const selector = document.getElementById('pdfSelector');
-            const iframe = document.getElementById('pdfFrame');
-            const placeholder = document.getElementById('placeholder');
-            
-            // Get the selected file path
-            const selectedFile = selector.value;
+        // Data structure matching the old select groups
+        const subjects = {
+            'maths': { title: 'Applied Maths', icon: '📈', papers: ['AppliedMaths_PYQ1.pdf', 'AppliedMaths_PYQ2.pdf', 'AppliedMaths_PYQ3.pdf'] },
+            'dsa': { title: 'Data Structures', icon: '🔗', papers: ['DSA_PYQ1.pdf', 'DSA_PYQ2.pdf', 'DSA_PYQ3.pdf'] },
+            'dbms': { title: 'Database Management', icon: '🗄️', papers: ['DBMS_PYQ1.pdf', 'DBMS_PYQ2.pdf', 'DBMS_PYQ3.pdf', 'DBMS_PYQ4.pdf'] },
+            'web': { title: 'Web Programming', icon: '🌐', papers: ['WBP_PYQ1.pdf', 'WBP_PYQ2.pdf', 'WBP_PYQ3.pdf'] },
+            'evs': { title: 'Environmental Studies', icon: '🌿', papers: ['EVS_PYQ1.pdf', 'EVS_PYQ2.pdf', 'EVS_PYQ3.pdf'] }
+        };
 
-            if (selectedFile) {
-                // Hide placeholder, show iframe, and load the PDF
-                placeholder.style.display = 'none';
-                iframe.style.display = 'block';
-                iframe.src = selectedFile;
+        // DOM elements
+        const appDrawer = document.getElementById('appDrawer');
+        const subjectGrid = document.getElementById('subjectGrid');
+        const paperGridContainer = document.getElementById('paperGridContainer');
+        const paperGrid = document.getElementById('paperGrid');
+        const iframeContainer = document.getElementById('iframeContainer');
+        const pdfFrame = document.getElementById('pdfFrame');
+
+        // Track the current subject key to populate back buttons
+        let currentSubjectKey = null;
+
+        // Initialization: Generate Subject Grid
+        function generateSubjectGrid() {
+            subjectGrid.innerHTML = '';
+            for (const key in subjects) {
+                const subject = subjects[key];
+                
+                // Create app card
+                const card = document.createElement('a');
+                card.classList.add('app-card');
+                card.href = "#"; // Prevent page reload
+                card.onclick = (e) => {
+                    e.preventDefault();
+                    viewPapers(key);
+                };
+                
+                // Inner structure: Icon, Title
+                card.innerHTML = `
+                    <div class="icon-box">${subject.icon}</div>
+                    <div class="app-title">${subject.title}</div>
+                `;
+                
+                subjectGrid.appendChild(card);
             }
         }
+
+        // Action: Subject Click - Show Paper Grid
+        function viewPapers(subjectKey) {
+            currentSubjectKey = subjectKey;
+            const subject = subjects[subjectKey];
+
+            // Hide other screens
+            appDrawer.classList.remove('active');
+            iframeContainer.classList.remove('active');
+
+            // Show paper grid and populate it
+            paperGridContainer.classList.add('active');
+            paperGrid.innerHTML = ''; // Clear old papers
+
+            subject.papers.forEach((pdfFile, index) => {
+                const paperName = `${subject.title} Papers / PYQ ${index + 1}`;
+                
+                // Create paper card (rectangular, consistent shining theme)
+                const paperCard = document.createElement('a');
+                paperCard.classList.add('paper-card');
+                paperCard.href = "#";
+                paperCard.onclick = (e) => {
+                    e.preventDefault();
+                    viewPaper(pdfFile, paperName);
+                };
+                
+                // Content: Paper Icon, Title, and chevron
+                paperCard.innerHTML = `
+                    <span>📄 PYQ ${index + 1}</span>
+                    <span style="font-size: 0.8rem; color: #93c5fd">→</span>
+                `;
+                
+                paperGrid.appendChild(paperCard);
+            });
+        }
+
+        // Action: Specific Paper Click - Show Iframe
+        function viewPaper(pdfUrl, paperTitle) {
+            // Hide paper list
+            paperGridContainer.classList.remove('active');
+
+            // Show iframe, set source, and update title (not strictly needed, but good)
+            iframeContainer.classList.add('active');
+            pdfFrame.style.display = 'block';
+            pdfFrame.src = pdfUrl + '?v=' + Date.now(); // Cache bust
+        }
+
+        // Navigation Actions (Back Buttons)
+        function goBackToSubjects() {
+            // Hide paper grid, show subject grid
+            paperGridContainer.classList.remove('active');
+            appDrawer.classList.add('active');
+            currentSubjectKey = null;
+        }
+
+        function goBackToPapers() {
+            // Hide iframe, return to paper list for the stored subject
+            iframeContainer.classList.remove('active');
+            pdfFrame.src = ''; // Stop PDF
+            if (currentSubjectKey) {
+                viewPapers(currentSubjectKey);
+            } else {
+                goBackToSubjects(); // Safety net
+            }
+        }
+
+        // Run on load
+        generateSubjectGrid();
     </script>
 </body>
 </html>
