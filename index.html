@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Subject PYQ Viewer - By Yugraj</title>
+    <title>Subject Resource Viewer - By Yugraj</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -16,7 +16,7 @@
             --shadow-hover: 0 30px 60px rgba(0, 0, 0, 0.6);
             --border-radius: 16px;
             --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            --shine-color: #3b82f6; /* Blue glow */
+            --shine-color: #3b82f6; 
         }
 
         * {
@@ -27,11 +27,11 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            min-height: 100vh; /* Changed from height: 100vh */
+            min-height: 100vh; 
             background: var(--bg-gradient);
             display: flex;
             flex-direction: column;
-            overflow-x: hidden; /* Removed overflow: hidden to allow vertical scrolling */
+            overflow-x: hidden; 
             color: var(--text-primary);
         }
 
@@ -59,7 +59,6 @@
             letter-spacing: -0.02em;
         }
 
-        /* Top Right Attribution */
         .attribution {
             font-size: 0.9rem;
             color: var(--text-secondary);
@@ -68,7 +67,7 @@
         }
 
         .heart {
-            color: #ef4444; /* explicitly red */
+            color: #ef4444; 
             font-size: 1rem;
             margin: 0 2px;
         }
@@ -82,19 +81,16 @@
             position: relative;
         }
 
-        /* App Grid / Paper Grid Container */
-        #appDrawer, #paperGridContainer {
+        /* View Layers */
+        .view-layer {
             flex: 1;
-            display: flex;
+            display: none; 
             flex-direction: column;
             align-items: center;
-            /* Removed overflow-y: auto to let the body handle the scrolling */
-            display: none; /* Hidden by default */
             width: 100%;
         }
 
-        /* Active screen is flexed and animated in */
-        #appDrawer.active, #paperGridContainer.active {
+        .view-layer.active {
             display: flex;
             animation: slideIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
@@ -104,7 +100,7 @@
             100% { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        /* Shining Button Class (for Back buttons) */
+        /* Shining Buttons */
         .btn-shine {
             padding: 1rem 2rem;
             border-radius: var(--border-radius);
@@ -123,9 +119,9 @@
             gap: 0.5rem;
             box-shadow: 0 5px 15px rgba(59, 130, 246, 0.2);
             margin-bottom: 2rem;
+            align-self: flex-start; 
         }
 
-        /* Shining Border Effect for Buttons (linear-gradient animation) */
         .btn-shine::before {
             content: '';
             position: absolute;
@@ -146,7 +142,7 @@
             border-color: rgba(59, 130, 246, 0.8);
         }
 
-        /* Introduction/Placeholder Text */
+        /* Intro Text */
         .intro-text {
             text-align: center;
             margin-bottom: 2.5rem;
@@ -168,17 +164,26 @@
             line-height: 1.6;
         }
 
-        /* Subject App Grid (Android style) */
-        #subjectGrid, #paperGrid {
+        /* Grids */
+        .app-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
             gap: 2rem;
             width: 100%;
             max-width: 1000px;
-            padding-bottom: 2rem; /* Added padding to bottom for better mobile scrolling */
+            padding-bottom: 2rem;
         }
 
-        /* App Card Styling (with intense, multi-layer shining borders) */
+        .list-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            width: 100%;
+            max-width: 1000px;
+            padding-bottom: 2rem;
+        }
+
+        /* App Cards */
         .app-card {
             background: var(--card-bg);
             border-radius: 20px;
@@ -191,15 +196,11 @@
             cursor: pointer;
             transition: var(--transition);
             border: var(--card-border);
-            aspect-ratio: 1; /* Keep them square like app icons */
+            aspect-ratio: 1; 
             box-shadow: 0 5px 15px rgba(59, 130, 246, 0.2);
             position: relative;
             text-decoration: none;
             color: var(--text-primary);
-        }
-
-        /* Advanced shining borders (multi-layer, pulsating glow) */
-        .app-card {
             animation: shineBorder 4s infinite alternate;
         }
 
@@ -213,7 +214,6 @@
             transform: translateY(-8px) scale(1.04);
         }
 
-        /* Shine Border Animation keyframe */
         @keyframes shineBorder {
             0% {
                 box-shadow: 0 5px 15px rgba(59, 130, 246, 0.2);
@@ -225,7 +225,6 @@
             }
         }
 
-        /* App Icon styled box */
         .icon-box {
             font-size: 3rem;
             margin-bottom: 1rem;
@@ -252,12 +251,12 @@
             max-width: 100%;
         }
 
-        /* Paper Grid specific card (rectangular) */
+        /* Paper/Note Cards */
         .paper-card {
             border-radius: 12px;
             padding: 1rem 1.5rem;
             font-weight: 600;
-            font-size: 1.1rem;
+            font-size: 1rem;
             border: var(--card-border);
             text-decoration: none;
             color: var(--text-primary);
@@ -269,6 +268,7 @@
             justify-content: space-between;
             gap: 1rem;
             animation: shineBorder 4s infinite alternate;
+            word-break: break-word;
         }
 
         .paper-card:hover {
@@ -281,27 +281,15 @@
             background: rgba(15, 15, 35, 0.9);
         }
 
-        /* Iframe and Back to Papers container */
-        #iframeContainer {
-            flex: 1;
-            display: none;
-            flex-direction: column;
-            min-height: 80vh; /* Added min-height to prevent collapse when body scrolls naturally */
-        }
-
-        #iframeContainer.active {
-            display: flex;
-        }
-
+        /* Iframe */
         iframe {
             flex: 1;
             width: 100%;
+            min-height: 80vh;
             border: none;
             background: #ffffff;
             border-radius: 16px;
             box-shadow: var(--shadow);
-            transform: scale(1);
-            transition: transform 0.3s ease;
         }
 
         /* Responsive */
@@ -309,156 +297,303 @@
             header { padding: 1rem 1.5rem; flex-direction: column; gap: 0.5rem; }
             #content { padding: 1.5rem; }
             h1 { font-size: 1.5rem; }
-            #subjectGrid { gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); }
+            .app-grid { gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); }
             .intro-text h3 { font-size: 1.6rem; }
             .icon-box { font-size: 2.5rem; }
-            .btn-shine { margin-bottom: 1.5rem; }
+            .btn-shine { margin-bottom: 1.5rem; align-self: center; }
             .attribution { font-size: 0.8rem; }
+            .list-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>🎓 PYQ Viewer</h1>
+        <h1>🎓 Study Viewer</h1>
         <div class="attribution">Made With <span class="heart">❤️</span> By Yugraj</div>
     </header>
 
     <div id="content">
-        <div id="appDrawer" class="active">
+        
+        <div id="categoryDrawer" class="view-layer active">
             <div class="intro-text">
                 <h3>Welcome</h3>
-                <p>Choose a subject below to view its previous year question papers and begin your preparation journey.</p>
+                <p>Choose between Previous Year Questions or Subject Notes to begin your preparation journey.</p>
             </div>
-            <div id="subjectGrid">
-                </div>
+            <div id="categoryGrid" class="app-grid"></div>
         </div>
 
-        <div id="paperGridContainer">
+        <div id="subjectDrawer" class="view-layer">
+            <button class="btn-shine" onclick="goBackToCategories()">← Back to Home</button>
+            <div class="intro-text">
+                <h3 id="subjectViewTitle">Subjects</h3>
+                <p>Choose a subject to view its materials.</p>
+            </div>
+            <div id="subjectGrid" class="app-grid"></div>
+        </div>
+
+        <div id="listDrawer" class="view-layer">
             <button class="btn-shine" onclick="goBackToSubjects()">← Back to Subjects</button>
-            <div id="paperGrid">
-                </div>
+            <div id="listGrid" class="list-grid"></div>
         </div>
 
-        <div id="iframeContainer">
-            <button class="btn-shine" onclick="goBackToPapers()">← Back to Paper List</button>
+        <div id="iframeContainer" class="view-layer">
+            <button class="btn-shine" onclick="goBackToList()">← Back to List</button>
             <iframe id="pdfFrame" allowfullscreen></iframe>
         </div>
     </div>
 
     <script>
-        // Data structure matching the old select groups
-        const subjects = {
-            'maths': { title: 'Applied Maths', icon: '📈', papers: ['AppliedMaths_PYQ1.pdf', 'AppliedMaths_PYQ2.pdf', 'AppliedMaths_PYQ3.pdf'] },
-            'dsa': { title: 'Data Structures', icon: '🔗', papers: ['DSA_PYQ1.pdf', 'DSA_PYQ2.pdf', 'DSA_PYQ3.pdf'] },
-            'dbms': { title: 'Database Management', icon: '🗄️', papers: ['DBMS_PYQ1.pdf', 'DBMS_PYQ2.pdf', 'DBMS_PYQ3.pdf', 'DBMS_PYQ4.pdf'] },
-            'web': { title: 'Web Programming', icon: '🌐', papers: ['WBP_PYQ1.pdf', 'WBP_PYQ2.pdf', 'WBP_PYQ3.pdf'] },
-            'evs': { title: 'Environmental Studies', icon: '🌿', papers: ['EVS_PYQ1.pdf', 'EVS_PYQ2.pdf', 'EVS_PYQ3.pdf'] }
+        // Data Structure
+        const categories = {
+            'pyqs': { title: 'Previous Year Questions', icon: '📝' },
+            'notes': { title: 'Subject Notes', icon: '📚' }
         };
 
-        // DOM elements
-        const appDrawer = document.getElementById('appDrawer');
-        const subjectGrid = document.getElementById('subjectGrid');
-        const paperGridContainer = document.getElementById('paperGridContainer');
-        const paperGrid = document.getElementById('paperGrid');
+        const subjects = {
+            'maths': { title: 'Applied Maths', icon: '📈' },
+            'dsa': { title: 'Data Structures', icon: '🔗' },
+            'dbms': { title: 'Database Management', icon: '🗄️' },
+            'web': { title: 'Web Programming', icon: '🌐' },
+            'evs': { title: 'Environmental Studies', icon: '🌿' }
+        };
+
+        const contentData = {
+            'pyqs': {
+                'maths': ['AppliedMaths_PYQ1.pdf', 'AppliedMaths_PYQ2.pdf', 'AppliedMaths_PYQ3.pdf'],
+                'dsa': ['DSA_PYQ1.pdf', 'DSA_PYQ2.pdf', 'DSA_PYQ3.pdf'],
+                'dbms': ['DBMS_PYQ1.pdf', 'DBMS_PYQ2.pdf', 'DBMS_PYQ3.pdf', 'DBMS_PYQ4.pdf'],
+                'web': ['WBP_PYQ1.pdf', 'WBP_PYQ2.pdf', 'WBP_PYQ3.pdf'],
+                'evs': ['EVS_PYQ1.pdf', 'EVS_PYQ2.pdf', 'EVS_PYQ3.pdf']
+            },
+            'notes': {
+                'maths': [],
+                'dsa': [
+                    { type: 'header', title: 'Unit 1' },
+                    { file: 'DSA UNIT-1.pdf', name: 'Introduction to DSA' },
+                    
+                    { type: 'header', title: 'Unit 2' },
+                    { file: 'DSA UNIT-2(DMA).pdf', name: 'Dynamic Memory Allocation (DMA)' },
+                    { file: 'UNIT-2 (LINKED LISTS).pdf', name: 'Linked Lists' },
+                    { file: 'UNIT 2- stack & Queue.pdf', name: 'Stack & Queue' },
+                    { file: 'Unit-2 Hashing and Collision Resolution.pdf', name: 'Hashing & Collision Resolution' },
+                    
+                    { type: 'header', title: 'Unit 4' },
+                    { file: 'UNIT 4-graph.pdf', name: 'Graphs' }
+                ],
+                'dbms': [
+                    { type: 'header', title: 'Unit 1: Introduction & ER Modeling' },
+                    { file: 'DBMS Class.pdf', name: 'DBMS' },
+                    { file: 'Data Model.pdf', name: 'Data Model' },
+                    { file: 'ER Diagram.pdf', name: 'ER Diagram' },
+                    { file: 'Keys in DBMS.pdf', name: 'Keys in DBMS' },
+                    { file: 'DBMS Generalization.pdf', name: 'DBMS Generalization' },
+                    
+                    { type: 'header', title: 'Unit 2: SQL' },
+                    { file: 'UNIT-2.pdf', name: 'Unit-2 Notes' },
+                    
+                    { type: 'header', title: 'Unit 3: Relational Model & Normalization' },
+                    { file: 'UNIT-3.pdf', name: 'Unit-3 Notes' },
+                    { file: 'UNIT 3b Relational Algebra.pdf', name: 'Relational Algebra' },
+                    { file: 'UNIT-3 c ER to relational mapping.pdf', name: 'ER to Relational Mapping' },
+                    
+                    { type: 'header', title: 'Projects & Case Studies' },
+                    { file: 'projectcasestudy.pdf', name: 'Project Case Study' }
+                ],
+                'web': [
+                    { type: 'header', title: 'Unit 1: Introduction, Control Statements & Arrays' },
+                    { file: '1.pdf', name: 'Introduction to PHP' },
+                    { file: '2.pdf', name: 'PHP Basics & Setup' },
+                    { file: '12 magical constant.pdf', name: 'Magical Constants' },
+                    { file: '11 Regular Expression.pdf', name: 'Regular Expressions' },
+                    { file: '3 conditonal statemens.pdf', name: 'Conditional Statements' },
+                    { file: '4 for loop.pdf', name: 'For Loop' },
+                    { file: '5 while do while.pdf', name: 'While & Do-While Loop' },
+                    { file: '8 array.pdf', name: 'Arrays' },
+                    { file: '9 sorted array.pdf', name: 'Sorted Arrays' },
+                    { file: '10 array function.pdf', name: 'Array Functions' },
+                    
+                    { type: 'header', title: 'Unit 2: Functions, Forms & State Management' },
+                    { file: '13 function.pdf', name: 'Functions' },
+                    { file: '14 inbuilt function.pdf', name: 'Inbuilt Functions' },
+                    { file: '15 Types of Errors in PHP.pdf', name: 'Types of Errors in PHP' },
+                    { file: '6 form.pdf', name: 'Forms Basics' },
+                    { file: '7 form.pdf', name: 'Forms Handling' },
+                    { file: '14 Cookie & Session.pdf', name: 'Cookies & Sessions' },
+                    { file: '16 include , hidden, query string.pdf', name: 'File Include, Hidden Fields & Query String' },
+
+                    { type: 'header', title: 'Unit 3: File Handling & OOP' },
+                    { file: '17 file handling.pdf', name: 'File Handling Operations' }
+                ],
+                'evs': [
+                    { type: 'header', title: 'Unit 1' },
+                    { file: 'EVS-Unit-1.pdf', name: 'Unit 1 Notes' },
+
+                    { type: 'header', title: 'Unit 2' },
+                    { file: 'UNIT-2 notes.pdf', name: 'Unit 2 Notes' },
+
+                    { type: 'header', title: 'Unit 3' },
+                    { file: 'EVS-Unit 3 for Internals.pdf', name: 'Unit 3 Notes (Internals)' }
+                ]
+            }
+        };
+
+        // State Tracking
+        let currentCategory = null;
+        let currentSubject = null;
+
+        // DOM Elements
+        const categoryDrawer = document.getElementById('categoryDrawer');
+        const subjectDrawer = document.getElementById('subjectDrawer');
+        const listDrawer = document.getElementById('listDrawer');
         const iframeContainer = document.getElementById('iframeContainer');
+
+        const categoryGrid = document.getElementById('categoryGrid');
+        const subjectGrid = document.getElementById('subjectGrid');
+        const listGrid = document.getElementById('listGrid');
         const pdfFrame = document.getElementById('pdfFrame');
+        const subjectViewTitle = document.getElementById('subjectViewTitle');
 
-        // Track the current subject key to populate back buttons
-        let currentSubjectKey = null;
+        // Helper to switch active view
+        function showView(viewElement) {
+            document.querySelectorAll('.view-layer').forEach(el => el.classList.remove('active'));
+            viewElement.classList.add('active');
+        }
 
-        // Initialization: Generate Subject Grid
-        function generateSubjectGrid() {
-            subjectGrid.innerHTML = '';
-            for (const key in subjects) {
-                const subject = subjects[key];
-                
-                // Create app card
+        // 1. Generate Categories
+        function renderCategories() {
+            categoryGrid.innerHTML = '';
+            for (const key in categories) {
+                const cat = categories[key];
                 const card = document.createElement('a');
                 card.classList.add('app-card');
-                card.href = "#"; // Prevent page reload
+                card.href = "#";
                 card.onclick = (e) => {
                     e.preventDefault();
-                    viewPapers(key);
+                    viewSubjects(key);
                 };
-                
-                // Inner structure: Icon, Title
+                card.innerHTML = `
+                    <div class="icon-box">${cat.icon}</div>
+                    <div class="app-title">${cat.title}</div>
+                `;
+                categoryGrid.appendChild(card);
+            }
+        }
+
+        // 2. Show Subjects for a Category
+        function viewSubjects(categoryKey) {
+            currentCategory = categoryKey;
+            subjectViewTitle.innerText = categories[categoryKey].title;
+            subjectGrid.innerHTML = '';
+            
+            for (const key in subjects) {
+                const subject = subjects[key];
+                const card = document.createElement('a');
+                card.classList.add('app-card');
+                card.href = "#";
+                card.onclick = (e) => {
+                    e.preventDefault();
+                    viewItemList(key);
+                };
                 card.innerHTML = `
                     <div class="icon-box">${subject.icon}</div>
                     <div class="app-title">${subject.title}</div>
                 `;
-                
                 subjectGrid.appendChild(card);
             }
+            showView(subjectDrawer);
         }
 
-        // Action: Subject Click - Show Paper Grid
-        function viewPapers(subjectKey) {
-            currentSubjectKey = subjectKey;
-            const subject = subjects[subjectKey];
+        // 3. Show List of Files (PYQs or Notes with Header Groupings)
+        function viewItemList(subjectKey) {
+            currentSubject = subjectKey;
+            const files = contentData[currentCategory][subjectKey];
+            listGrid.innerHTML = '';
 
-            // Hide other screens
-            appDrawer.classList.remove('active');
-            iframeContainer.classList.remove('active');
-
-            // Show paper grid and populate it
-            paperGridContainer.classList.add('active');
-            paperGrid.innerHTML = ''; // Clear old papers
-
-            subject.papers.forEach((pdfFile, index) => {
-                const paperName = `${subject.title} Papers / PYQ ${index + 1}`;
-                
-                // Create paper card (rectangular, consistent shining theme)
-                const paperCard = document.createElement('a');
-                paperCard.classList.add('paper-card');
-                paperCard.href = "#";
-                paperCard.onclick = (e) => {
-                    e.preventDefault();
-                    viewPaper(pdfFile, paperName);
-                };
-                
-                // Content: Paper Icon, Title, and chevron
-                paperCard.innerHTML = `
-                    <span>📄 PYQ ${index + 1}</span>
-                    <span style="font-size: 0.8rem; color: #93c5fd">→</span>
-                `;
-                
-                paperGrid.appendChild(paperCard);
-            });
-        }
-
-        // Action: Specific Paper Click - Show Iframe
-        function viewPaper(pdfUrl, paperTitle) {
-            // Hide paper list
-            paperGridContainer.classList.remove('active');
-
-            // Show iframe, set source, and update title (not strictly needed, but good)
-            iframeContainer.classList.add('active');
-            pdfFrame.style.display = 'block';
-            pdfFrame.src = pdfUrl + '?v=' + Date.now(); // Cache bust
-        }
-
-        // Navigation Actions (Back Buttons)
-        function goBackToSubjects() {
-            // Hide paper grid, show subject grid
-            paperGridContainer.classList.remove('active');
-            appDrawer.classList.add('active');
-            currentSubjectKey = null;
-        }
-
-        function goBackToPapers() {
-            // Hide iframe, return to paper list for the stored subject
-            iframeContainer.classList.remove('active');
-            pdfFrame.src = ''; // Stop PDF
-            if (currentSubjectKey) {
-                viewPapers(currentSubjectKey);
+            if (!files || files.length === 0) {
+                listGrid.innerHTML = `<div style="text-align: center; width: 100%; grid-column: 1 / -1;">No materials uploaded yet for this subject.</div>`;
             } else {
-                goBackToSubjects(); // Safety net
+                files.forEach((item, index) => {
+                    let fileName, displayName, isHeader = false;
+
+                    // Handle standard strings OR new formatted objects
+                    if (typeof item === 'string') {
+                        fileName = item;
+                        if (currentCategory === 'pyqs') {
+                            displayName = `PYQ Paper ${index + 1}`;
+                        } else {
+                            displayName = fileName.replace('.pdf', '');
+                        }
+                    } else if (item.type === 'header') {
+                        isHeader = true;
+                        displayName = item.title;
+                    } else {
+                        // It's a structured file object
+                        fileName = item.file;
+                        displayName = item.name;
+                    }
+
+                    // Render Group Header
+                    if (isHeader) {
+                        const header = document.createElement('div');
+                        header.style.width = '100%';
+                        header.style.gridColumn = '1 / -1';
+                        header.style.fontSize = '1.2rem';
+                        header.style.fontWeight = '600';
+                        header.style.marginTop = '1.5rem';
+                        header.style.color = '#93c5fd';
+                        header.style.borderBottom = '1px solid rgba(59, 130, 246, 0.3)';
+                        header.style.paddingBottom = '0.5rem';
+                        header.innerText = displayName;
+                        listGrid.appendChild(header);
+                        return; // Skip drawing a normal card
+                    }
+
+                    // Render Normal Card
+                    let fileIcon = currentCategory === 'pyqs' ? '📄' : '📝';
+                    
+                    const itemCard = document.createElement('a');
+                    itemCard.classList.add('paper-card');
+                    itemCard.href = "#";
+                    itemCard.onclick = (e) => {
+                        e.preventDefault();
+                        openPDF(fileName);
+                    };
+                    
+                    itemCard.innerHTML = `
+                        <span>${fileIcon} ${displayName}</span>
+                        <span style="font-size: 0.8rem; color: #93c5fd; flex-shrink: 0;">→</span>
+                    `;
+                    listGrid.appendChild(itemCard);
+                });
             }
+            showView(listDrawer);
         }
 
-        // Run on load
-        generateSubjectGrid();
+        // 4. Open PDF inside iframe
+        function openPDF(fileName) {
+            pdfFrame.src = fileName + '?v=' + Date.now(); 
+            showView(iframeContainer);
+        }
+
+        // Navigation Back Buttons
+        function goBackToCategories() {
+            currentCategory = null;
+            showView(categoryDrawer);
+        }
+
+        function goBackToSubjects() {
+            currentSubject = null;
+            showView(subjectDrawer);
+        }
+
+        function goBackToList() {
+            pdfFrame.src = ''; // Clear iframe to stop loading
+            showView(listDrawer);
+        }
+
+        // Initialize App
+        renderCategories();
     </script>
 </body>
 </html>
