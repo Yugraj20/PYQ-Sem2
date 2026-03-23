@@ -70,6 +70,7 @@
             height: 80px;
             background: rgba(5,6,15,0.85);
             backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
             border-bottom: 1px solid var(--border);
         }
 
@@ -105,19 +106,26 @@
             padding: 0.35rem 1rem;
             border-radius: 99px;
             letter-spacing: 0.03em;
+            /* CRITICAL FIXES FOR OVAL BUG */
+            white-space: nowrap; 
+            flex-shrink: 0;
         }
 
-        /* ── Breadcrumb ── */
+        /* ── Breadcrumb (Now Sticky) ── */
         #breadcrumb {
-            position: relative;
-            z-index: 1;
+            position: sticky;
+            z-index: 190;
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            padding: 1.5rem 3rem 0;
+            padding: 1rem 3rem;
             font-size: 0.85rem;
             color: var(--text-3);
             min-height: 2.8rem;
+            background: rgba(5,6,15,0.95);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255,255,255,0.02);
         }
 
         .crumb { cursor: pointer; transition: color 0.2s; }
@@ -130,7 +138,7 @@
             flex: 1;
             position: relative;
             z-index: 1;
-            padding: 2.5rem 3rem 4rem;
+            padding: 1.5rem 3rem 4rem; /* Reduced top padding to accommodate sticky header */
         }
 
         /* ── View layers ── */
@@ -311,14 +319,27 @@
             line-height: 1.3;
         }
 
-        /* ── List view ── */
+        /* ── List view & Sticky Items ── */
         .list-toolbar {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 1.75rem;
             flex-wrap: wrap;
             gap: 0.75rem;
+
+            /* Sticky Setup */
+            position: sticky;
+            z-index: 180;
+            background: rgba(5,6,15,0.95);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            
+            /* Counter content padding to allow background to stretch */
+            margin-left: -3rem;
+            margin-right: -3rem;
+            padding: 1rem 3rem;
+            margin-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.02);
         }
 
         .list-grid {
@@ -332,13 +353,24 @@
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            padding: 1.5rem 0 0.6rem;
             font-family: 'Syne', sans-serif;
             font-size: 0.76rem;
             font-weight: 700;
             letter-spacing: 0.1em;
             text-transform: uppercase;
             color: var(--text-3);
+
+            /* Sticky Setup */
+            position: sticky;
+            z-index: 170;
+            background: rgba(5,6,15,0.95);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            
+            /* Counter content padding */
+            margin-left: -3rem;
+            margin-right: -3rem;
+            padding: 1.25rem 3rem 0.6rem;
         }
 
         .group-header::after {
@@ -505,11 +537,38 @@
         @media (max-width: 768px) {
             html { font-size: 16px; }
             header { padding: 0 1.5rem; height: 68px; }
-            #breadcrumb { padding: 1.2rem 1.5rem 0; }
-            #content { padding: 1.75rem 1.5rem 3rem; }
+            
+            #breadcrumb { padding: 0.8rem 1.5rem; }
+            #content { padding: 1.25rem 1.5rem 3rem; }
+            
+            /* Responsive adjustments for negative margins on sticky items */
+            .list-toolbar {
+                margin-left: -1.5rem;
+                margin-right: -1.5rem;
+                padding: 1rem 1.5rem;
+            }
+            .group-header {
+                margin-left: -1.5rem;
+                margin-right: -1.5rem;
+                padding: 1.25rem 1.5rem 0.6rem;
+            }
+
             .cat-grid { grid-template-columns: 1fr; }
             .sub-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
             .section-heading h2 { font-size: 1.8rem; }
+        }
+
+        /* Further fix for very small mobile screens to save badge */
+        @media (max-width: 480px) {
+            .badge {
+                font-size: 0.65rem;
+                padding: 0.25rem 0.6rem;
+            }
+            .logo-text { font-size: 1.1rem; }
+            .logo-icon { width: 36px; height: 36px; font-size: 1.1rem; }
+        }
+        @media (max-width: 360px) {
+            .badge { display: none; } /* Complete fallback for super narrow screens */
         }
     </style>
 </head>
@@ -527,7 +586,6 @@
 
 <div id="content">
 
-    <!-- View 1: Categories -->
     <div id="categoryDrawer" class="view-layer active">
         <div class="section-heading">
             <h2>Where do you want to start?</h2>
@@ -537,7 +595,6 @@
         <div class="cat-grid" id="categoryGrid"></div>
     </div>
 
-    <!-- View 2: Subjects -->
     <div id="subjectDrawer" class="view-layer">
         <div class="section-heading">
             <h2 id="subjectViewTitle">Subjects</h2>
@@ -547,7 +604,6 @@
         <div class="sub-grid" id="subjectGrid"></div>
     </div>
 
-    <!-- View 3: File list -->
     <div id="listDrawer" class="view-layer">
         <div class="list-toolbar">
             <div class="section-heading" style="margin-bottom:0;">
@@ -558,7 +614,6 @@
         <div class="list-grid" id="listGrid"></div>
     </div>
 
-    <!-- View 4: PDF iframe -->
     <div id="iframeContainer" class="view-layer">
         <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.5rem;">
             <span id="iframeTitle" style="font-family:'Syne',sans-serif;font-weight:600;font-size:1.1rem;color:var(--text-1);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></span>
@@ -673,11 +728,44 @@
     const iframeTitle      = document.getElementById('iframeTitle');
     const breadcrumb       = document.getElementById('breadcrumb');
 
+    // JS Logic for Dynamic Sticky Calculation
+    function updateStickyOffsets() {
+        const header = document.querySelector('header');
+        const bread = document.getElementById('breadcrumb');
+        const toolbar = document.querySelector('.list-toolbar');
+
+        if (!header || !bread) return;
+
+        // Stick Breadcrumb directly under header
+        const headerH = header.offsetHeight;
+        bread.style.top = `${headerH}px`;
+
+        // We only need to adjust toolbar and group headers if the list is visible
+        if (views.list.classList.contains('active')) {
+            const breadH = bread.offsetHeight;
+            toolbar.style.top = `${headerH + breadH}px`;
+
+            const toolH = toolbar.offsetHeight;
+            const groupHeaders = document.querySelectorAll('.group-header');
+            
+            // Subtracted 1px to close any visual sub-pixel gaps between sticky boundaries
+            groupHeaders.forEach(gh => {
+                gh.style.top = `${headerH + breadH + toolH - 1}px`;
+            });
+        }
+    }
+
+    // Attach resize listener to keep heights accurate when device rotates or resizes
+    window.addEventListener('resize', updateStickyOffsets);
+
     function showView(name) {
         Object.values(views).forEach(v => v.classList.remove('active'));
         views[name].classList.add('active');
         updateBreadcrumb();
         window.scrollTo({ top: 0, behavior: 'smooth' });
+        
+        // Let the DOM render the new height metrics before firing sticky offset calculation
+        setTimeout(updateStickyOffsets, 50);
     }
 
     function updateBreadcrumb() {
@@ -696,6 +784,8 @@
         breadcrumb.querySelectorAll('.crumb:not(.active)').forEach((el, i) => {
             el.addEventListener('click', crumbs[i].action);
         });
+        
+        setTimeout(updateStickyOffsets, 50);
     }
 
     function renderCategories() {
