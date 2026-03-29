@@ -3,119 +3,488 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WBP Important Exam Questions</title>
+    <title>WBP Important Questions – StudyViewer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg: #05060f;
+            --surface: #0d0e1d;
+            --surface2: #131426;
+            --border: rgba(255,255,255,0.06);
+            --border-hover: rgba(99,102,241,0.5);
+            --accent: #6366f1;
+            --accent2: #818cf8;
+            --accent-yellow: #fbbf24;
+            --accent-green: #34d399;
+            --text-1: #f1f5f9;
+            --text-2: #94a3b8;
+            --text-3: #475569;
+            --r: 20px;
+            --r-sm: 14px;
+            --glow: 0 0 50px rgba(99,102,241,0.18);
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; font-size: 18px; }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 800px;
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text-1);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Background glows */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 60% 50% at 20% 10%, rgba(99,102,241,0.13) 0%, transparent 60%),
+                radial-gradient(ellipse 50% 40% at 80% 80%, rgba(251,191,36,0.06) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            opacity: 0.025;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ── Header ── */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 3rem;
+            height: 80px;
+            background: rgba(5,6,15,0.85);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 44px; height: 44px;
+            background: linear-gradient(135deg, var(--accent), #4f46e5);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.35rem;
+            box-shadow: 0 0 24px rgba(99,102,241,0.45);
+        }
+
+        .logo-text {
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 1.35rem;
+            color: var(--text-1);
+        }
+
+        .home-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.55rem 1.2rem;
+            border-radius: 10px;
+            font-size: 0.88rem;
+            font-weight: 500;
+            font-family: 'DM Sans', sans-serif;
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--text-2);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            transition: border-color 0.2s, color 0.2s, background 0.2s, transform 0.2s;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .home-btn:hover {
+            border-color: rgba(99,102,241,0.4);
+            color: var(--accent2);
+            background: var(--surface2);
+            transform: translateX(-3px);
+        }
+
+        /* ── Page content ── */
+        main {
+            position: relative;
+            z-index: 1;
+            max-width: 860px;
             margin: 0 auto;
-            padding: 20px;
-            background-color: #f9f9f9;
+            padding: 2.5rem 2rem 5rem;
         }
-        h1 {
-            text-align: center;
-            color: #2c3e50;
-            border-bottom: 2px solid #3498db;
-            padding-bottom: 10px;
+
+        /* ── Hero ── */
+        .page-hero {
+            margin-bottom: 2.5rem;
         }
+
+        .page-hero-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--accent-yellow);
+            background: rgba(251,191,36,0.1);
+            border: 1px solid rgba(251,191,36,0.25);
+            padding: 0.3rem 0.9rem;
+            border-radius: 99px;
+            margin-bottom: 1rem;
+        }
+
+        .page-hero h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: 2.6rem;
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            color: var(--text-1);
+            line-height: 1.15;
+        }
+
+        .page-hero p {
+            margin-top: 0.75rem;
+            font-size: 1rem;
+            color: var(--text-2);
+            font-weight: 300;
+        }
+
+        .divider {
+            width: 100%;
+            height: 1px;
+            background: var(--border);
+            margin: 2rem 0;
+        }
+
+        /* ── Topic cards ── */
         .topic-section {
-            background: #fff;
-            margin-bottom: 20px;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 1.75rem 2rem;
+            margin-bottom: 1.25rem;
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.25s, box-shadow 0.25s;
         }
-        h2 {
-            color: #2980b9;
-            margin-top: 0;
-            font-size: 1.4em;
+
+        .topic-section::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 3px;
+            background: linear-gradient(180deg, var(--accent), var(--accent2));
+            border-radius: 99px;
+            opacity: 0;
+            transition: opacity 0.3s;
         }
-        ul {
-            padding-left: 20px;
+
+        .topic-section:hover {
+            border-color: var(--border-hover);
+            box-shadow: var(--glow);
         }
-        li {
-            margin-bottom: 10px;
+
+        .topic-section:hover::before { opacity: 1; }
+
+        /* Topic number + title row */
+        .topic-header {
+            display: flex;
+            align-items: center;
+            gap: 0.9rem;
+            margin-bottom: 1.25rem;
         }
+
+        .topic-num {
+            width: 36px; height: 36px;
+            border-radius: 10px;
+            background: rgba(99,102,241,0.13);
+            color: var(--accent2);
+            font-family: 'Syne', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+            border: 1px solid rgba(99,102,241,0.2);
+        }
+
+        .topic-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--text-1);
+        }
+
+        /* Question list */
+        .q-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.65rem;
+        }
+
+        .q-item {
+            display: flex;
+            gap: 0.85rem;
+            align-items: flex-start;
+            padding: 0.85rem 1rem;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: var(--r-sm);
+            font-size: 0.9rem;
+            color: var(--text-2);
+            line-height: 1.6;
+            transition: border-color 0.2s, color 0.2s;
+        }
+
+        .q-item:hover {
+            border-color: rgba(99,102,241,0.25);
+            color: var(--text-1);
+        }
+
+        /* Tag chip */
         .tag {
-            font-weight: bold;
-            color: #e67e22;
+            display: inline-flex;
+            align-items: center;
+            padding: 0.2rem 0.65rem;
+            border-radius: 99px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            white-space: nowrap;
+            flex-shrink: 0;
+            margin-top: 0.15rem;
+        }
+
+        .tag-concept  { background: rgba(99,102,241,0.15); color: var(--accent2);      border: 1px solid rgba(99,102,241,0.25); }
+        .tag-coding   { background: rgba(52,211,153,0.12); color: var(--accent-green); border: 1px solid rgba(52,211,153,0.25); }
+        .tag-function { background: rgba(251,191,36,0.12); color: var(--accent-yellow);border: 1px solid rgba(251,191,36,0.25); }
+        .tag-related  { background: rgba(248,113,113,0.12);color: #f87171;             border: 1px solid rgba(248,113,113,0.25); }
+
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.85em;
+            background: rgba(99,102,241,0.12);
+            color: var(--accent2);
+            padding: 0.15em 0.45em;
+            border-radius: 5px;
+            border: 1px solid rgba(99,102,241,0.2);
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            html { font-size: 16px; }
+            header { padding: 0 1.5rem; height: 68px; }
+            main { padding: 1.75rem 1.25rem 4rem; }
+            .page-hero h1 { font-size: 2rem; }
+            .topic-section { padding: 1.25rem 1.25rem; }
         }
     </style>
 </head>
 <body>
 
-    <h1>Web Based Programming (WBP) - Important Questions</h1>
+<header>
+    <a class="logo" href="index.html">
+        <div class="logo-icon">🎓</div>
+        <span class="logo-text">StudyViewer</span>
+    </a>
+    <a class="home-btn" href="index.html">← Back to Home</a>
+</header>
 
+<main>
+    <div class="page-hero">
+        <div class="page-hero-eyebrow">⭐ Important Questions</div>
+        <h1>Web Based Programming</h1>
+        <p>High-priority topics and questions curated for exam preparation.</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- 1 -->
     <div class="topic-section">
-        <h2>1. Arrays & Their Functions</h2>
-        <ul>
-            <li><span class="tag">Concepts:</span> What do you understand by an Associative array? How is an associative array different from an indexed array?</li>
-            <li><span class="tag">Coding:</span> Write a short note on associative arrays. Create an associative array using countries as keys and cities as values, transform it into a 2D array, and display the data in a tabular form.</li>
-            <li><span class="tag">Functions:</span> Explain <code>explode()</code>, <code>krsort()</code>, and <code>count()</code> functions with examples.</li>
+        <div class="topic-header">
+            <div class="topic-num">01</div>
+            <div class="topic-title">Arrays & Their Functions</div>
+        </div>
+        <ul class="q-list">
+            <li class="q-item">
+                <span class="tag tag-concept">Concept</span>
+                What do you understand by an Associative array? How is an associative array different from an indexed array?
+            </li>
+            <li class="q-item">
+                <span class="tag tag-coding">Coding</span>
+                Write a short note on associative arrays. Create an associative array using countries as keys and cities as values, transform it into a 2D array, and display the data in a tabular form.
+            </li>
+            <li class="q-item">
+                <span class="tag tag-function">Functions</span>
+                Explain <code>explode()</code>, <code>krsort()</code>, and <code>count()</code> functions with examples.
+            </li>
         </ul>
     </div>
 
+    <!-- 2 -->
     <div class="topic-section">
-        <h2>2. Functions (Call by Value vs. Call by Reference)</h2>
-        <ul>
-            <li><span class="tag">Concepts:</span> Differentiate between Call by Value and Call by Reference concepts with suitable examples.</li>
-            <li><span class="tag">Coding:</span> Write a user-defined function for swapping two variables using call by value and call by reference. Differentiate the output produced by both methods.</li>
+        <div class="topic-header">
+            <div class="topic-num">02</div>
+            <div class="topic-title">Functions — Call by Value vs. Call by Reference</div>
+        </div>
+        <ul class="q-list">
+            <li class="q-item">
+                <span class="tag tag-concept">Concept</span>
+                Differentiate between Call by Value and Call by Reference concepts with suitable examples.
+            </li>
+            <li class="q-item">
+                <span class="tag tag-coding">Coding</span>
+                Write a user-defined function for swapping two variables using call by value and call by reference. Differentiate the output produced by both methods.
+            </li>
         </ul>
     </div>
 
+    <!-- 3 -->
     <div class="topic-section">
-        <h2>3. PHP Errors & Types</h2>
-        <ul>
-            <li><span class="tag">Concepts:</span> What are the different types of errors in PHP? Explain by citing appropriate examples for each type.</li>
-            <li><span class="tag">Related:</span> Differentiate between exceptions and errors.</li>
+        <div class="topic-header">
+            <div class="topic-num">03</div>
+            <div class="topic-title">PHP Errors & Types</div>
+        </div>
+        <ul class="q-list">
+            <li class="q-item">
+                <span class="tag tag-concept">Concept</span>
+                What are the different types of errors in PHP? Explain by citing appropriate examples for each type.
+            </li>
+            <li class="q-item">
+                <span class="tag tag-related">Related</span>
+                Differentiate between exceptions and errors.
+            </li>
         </ul>
     </div>
 
+    <!-- 4 -->
     <div class="topic-section">
-        <h2>4. Forms, Validations & Methods (GET/POST)</h2>
-        <ul>
-            <li><span class="tag">Concepts:</span> What are the differences between <code>GET</code>, <code>POST</code>, and <code>REQUEST</code> methods?</li>
-            <li><span class="tag">Coding (Form):</span> Write a PHP code to design a "Contact Us" form and provide validation on the email and name fields.</li>
-            <li><span class="tag">Coding (Practical Application):</span> Create a registration form (fields: Name, Gender, Address, Hobbies, City, DOB). Write a PHP script to submit this data and print the received data on another page.</li>
+        <div class="topic-header">
+            <div class="topic-num">04</div>
+            <div class="topic-title">Forms, Validations & Methods (GET / POST)</div>
+        </div>
+        <ul class="q-list">
+            <li class="q-item">
+                <span class="tag tag-concept">Concept</span>
+                What are the differences between <code>GET</code>, <code>POST</code>, and <code>REQUEST</code> methods?
+            </li>
+            <li class="q-item">
+                <span class="tag tag-coding">Coding</span>
+                Write a PHP code to design a "Contact Us" form and provide validation on the email and name fields.
+            </li>
+            <li class="q-item">
+                <span class="tag tag-coding">Coding</span>
+                Create a registration form (fields: Name, Gender, Address, Hobbies, City, DOB). Write a PHP script to submit this data and print the received data on another page.
+            </li>
         </ul>
     </div>
 
+    <!-- 5 -->
     <div class="topic-section">
-        <h2>5. State Management (Sessions & Cookies)</h2>
-        <ul>
-            <li><span class="tag">Concepts:</span> What are the differences between Cookies & Sessions? Differentiate between state management techniques in PHP.</li>
-            <li><span class="tag">Coding (Sessions):</span> Explain Sessions and write a PHP script to count the number of visits to a web page by a user using a session variable (in 24 hours).</li>
-            <li><span class="tag">Coding (Advanced):</span> Create a registration form for a bank portal where the session should expire if the system is idle for 1 minute.</li>
+        <div class="topic-header">
+            <div class="topic-num">05</div>
+            <div class="topic-title">State Management — Sessions & Cookies</div>
+        </div>
+        <ul class="q-list">
+            <li class="q-item">
+                <span class="tag tag-concept">Concept</span>
+                What are the differences between Cookies & Sessions? Differentiate between state management techniques in PHP.
+            </li>
+            <li class="q-item">
+                <span class="tag tag-coding">Coding</span>
+                Explain Sessions and write a PHP script to count the number of visits to a web page by a user using a session variable (in 24 hours).
+            </li>
+            <li class="q-item">
+                <span class="tag tag-coding">Coding</span>
+                Create a registration form for a bank portal where the session should expire if the system is idle for 1 minute.
+            </li>
         </ul>
     </div>
 
+    <!-- 6 -->
     <div class="topic-section">
-        <h2>6. File & Directory Handling</h2>
-        <ul>
-            <li><span class="tag">Concepts:</span> What is File Handling in PHP? What are the different file opening modes used with the <code>fopen()</code> function?</li>
-            <li><span class="tag">Functions:</span> Explain the following file handling functions: <code>fread()</code>, <code>fgets()</code>, and <code>unlink()</code>.</li>
-            <li><span class="tag">Coding (Read/Write):</span> Write a PHP script to open, close, read, and write into a file line by line, displaying it on a webpage.</li>
-            <li><span class="tag">Coding (Upload):</span> Write a program using PHP to upload and download an image. Implement validations (e.g., must be format *jpg, *png, *jpeg, and must not be greater than 1MB).</li>
+        <div class="topic-header">
+            <div class="topic-num">06</div>
+            <div class="topic-title">File & Directory Handling</div>
+        </div>
+        <ul class="q-list">
+            <li class="q-item">
+                <span class="tag tag-concept">Concept</span>
+                What is File Handling in PHP? What are the different file opening modes used with the <code>fopen()</code> function?
+            </li>
+            <li class="q-item">
+                <span class="tag tag-function">Functions</span>
+                Explain the following file handling functions: <code>fread()</code>, <code>fgets()</code>, and <code>unlink()</code>.
+            </li>
+            <li class="q-item">
+                <span class="tag tag-coding">Coding</span>
+                Write a PHP script to open, close, read, and write into a file line by line, displaying it on a webpage.
+            </li>
+            <li class="q-item">
+                <span class="tag tag-coding">Coding</span>
+                Write a program using PHP to upload and download an image. Implement validations (must be jpg/png/jpeg and not greater than 1MB).
+            </li>
         </ul>
     </div>
 
+    <!-- 7 -->
     <div class="topic-section">
-        <h2>7. Server Architectures</h2>
-        <ul>
-            <li><span class="tag">Concepts:</span> Differentiate between WAMP, LAMP, MAMP, and XAMPP.</li>
-            <li><span class="tag">Related Server Concepts:</span> What are the advantages of PHP? Differentiate between Client-Side Scripting vs. Server-Side Scripting, and Static Website vs. Dynamic Website.</li>
+        <div class="topic-header">
+            <div class="topic-num">07</div>
+            <div class="topic-title">Server Architectures</div>
+        </div>
+        <ul class="q-list">
+            <li class="q-item">
+                <span class="tag tag-concept">Concept</span>
+                Differentiate between WAMP, LAMP, MAMP, and XAMPP.
+            </li>
+            <li class="q-item">
+                <span class="tag tag-related">Related</span>
+                What are the advantages of PHP? Differentiate between Client-Side Scripting vs. Server-Side Scripting, and Static Website vs. Dynamic Website.
+            </li>
         </ul>
     </div>
 
+    <!-- 8 -->
     <div class="topic-section">
-        <h2>8. Include, Require & Super Globals</h2>
-        <ul>
-            <li><span class="tag">Concepts:</span> Differentiate between <code>include()</code>, <code>include_once()</code>, <code>require()</code>, and <code>require_once()</code>.</li>
-            <li><span class="tag">Super Globals:</span> What are Super Global Variables in PHP? Explain them in detail (especially <code>$_REQUEST</code>, <code>$_GET</code>, <code>$_POST</code>).</li>
+        <div class="topic-header">
+            <div class="topic-num">08</div>
+            <div class="topic-title">Include, Require & Super Globals</div>
+        </div>
+        <ul class="q-list">
+            <li class="q-item">
+                <span class="tag tag-concept">Concept</span>
+                Differentiate between <code>include()</code>, <code>include_once()</code>, <code>require()</code>, and <code>require_once()</code>.
+            </li>
+            <li class="q-item">
+                <span class="tag tag-related">Related</span>
+                What are Super Global Variables in PHP? Explain them in detail (especially <code>$_REQUEST</code>, <code>$_GET</code>, <code>$_POST</code>).
+            </li>
         </ul>
     </div>
 
+</main>
 </body>
 </html>
