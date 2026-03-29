@@ -15,6 +15,7 @@
             --accent: #6366f1;
             --accent2: #818cf8;
             --accent-green: #34d399;
+            --accent-yellow: #fbbf24;
             --text-1: #f1f5f9;
             --text-2: #94a3b8;
             --text-3: #475569;
@@ -106,7 +107,6 @@
             padding: 0.35rem 1rem;
             border-radius: 99px;
             letter-spacing: 0.03em;
-            /* CRITICAL FIXES FOR OVAL BUG */
             white-space: nowrap; 
             flex-shrink: 0;
         }
@@ -138,7 +138,7 @@
             flex: 1;
             position: relative;
             z-index: 1;
-            padding: 1.5rem 3rem 4rem; /* Reduced top padding to accommodate sticky header */
+            padding: 1.5rem 3rem 4rem;
         }
 
         /* ── View layers ── */
@@ -327,19 +327,25 @@
             flex-wrap: wrap;
             gap: 0.75rem;
 
-            /* Sticky Setup */
             position: sticky;
             z-index: 180;
             background: rgba(5,6,15,0.95);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             
-            /* Counter content padding to allow background to stretch */
             margin-left: -3rem;
             margin-right: -3rem;
             padding: 1rem 3rem;
             margin-bottom: 0.5rem;
             border-bottom: 1px solid rgba(255,255,255,0.02);
+        }
+
+        /* Button group inside toolbar */
+        .toolbar-btn-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
         }
 
         .list-grid {
@@ -360,14 +366,12 @@
             text-transform: uppercase;
             color: var(--text-3);
 
-            /* Sticky Setup */
             position: sticky;
             z-index: 170;
             background: rgba(5,6,15,0.95);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             
-            /* Counter content padding */
             margin-left: -3rem;
             margin-right: -3rem;
             padding: 1.25rem 3rem 0.6rem;
@@ -520,6 +524,19 @@
             color: var(--accent-green);
         }
 
+        /* ── New: Important Questions button (amber/yellow) ── */
+        .btn-yellow {
+            background: rgba(251,191,36,0.1);
+            border-color: rgba(251,191,36,0.3);
+            color: var(--accent-yellow);
+        }
+
+        .btn-yellow:hover {
+            background: rgba(251,191,36,0.18);
+            border-color: rgba(251,191,36,0.5);
+            color: var(--accent-yellow);
+        }
+
         /* ── Iframe view ── */
         #iframeContainer { gap: 1rem; }
 
@@ -541,7 +558,6 @@
             #breadcrumb { padding: 0.8rem 1.5rem; }
             #content { padding: 1.25rem 1.5rem 3rem; }
             
-            /* Responsive adjustments for negative margins on sticky items */
             .list-toolbar {
                 margin-left: -1.5rem;
                 margin-right: -1.5rem;
@@ -558,7 +574,6 @@
             .section-heading h2 { font-size: 1.8rem; }
         }
 
-        /* Further fix for very small mobile screens to save badge */
         @media (max-width: 480px) {
             .badge {
                 font-size: 0.65rem;
@@ -568,7 +583,7 @@
             .logo-icon { width: 36px; height: 36px; font-size: 1.1rem; }
         }
         @media (max-width: 360px) {
-            .badge { display: none; } /* Complete fallback for super narrow screens */
+            .badge { display: none; }
         }
     </style>
 </head>
@@ -609,7 +624,11 @@
             <div class="section-heading" style="margin-bottom:0;">
                 <h2 id="listTitle">Materials</h2>
             </div>
-            <button id="topSyllabusBtn" class="btn btn-green" style="display:none;">📑 View Syllabus</button>
+            <!-- Button group keeps both buttons together -->
+            <div class="toolbar-btn-group">
+                <button id="topSyllabusBtn" class="btn btn-green" style="display:none;">📑 View Syllabus</button>
+                <button id="topImpQBtn"     class="btn btn-yellow" style="display:none;">⭐ Important Questions</button>
+            </div>
         </div>
         <div class="list-grid" id="listGrid"></div>
     </div>
@@ -633,7 +652,7 @@
         'maths': { title: 'Applied Maths',         icon: '📈', syllabus: 'AM Syllabus.pdf' },
         'dsa':   { title: 'DSA',                   icon: '🔗', syllabus: 'DSA Syllabus.pdf' },
         'dbms':  { title: 'DBMS',                  icon: '🗄️', syllabus: 'DBMS Syllabus.pdf' },
-        'web':   { title: 'WBP',                   icon: '🌐', syllabus: 'WBP Syllabus.pdf' },
+        'web':   { title: 'WBP',                   icon: '🌐', syllabus: 'WBP Syllabus.pdf', impQ: 'WBPimp.html' },
         'evs':   { title: 'Environmental Studies', icon: '🌿', syllabus: 'EVS Syllabus.pdf' }
     };
 
@@ -725,10 +744,10 @@
     const subjectViewTitle = document.getElementById('subjectViewTitle');
     const listTitle        = document.getElementById('listTitle');
     const topSyllabusBtn   = document.getElementById('topSyllabusBtn');
+    const topImpQBtn       = document.getElementById('topImpQBtn');
     const iframeTitle      = document.getElementById('iframeTitle');
     const breadcrumb       = document.getElementById('breadcrumb');
 
-    // JS Logic for Dynamic Sticky Calculation
     function updateStickyOffsets() {
         const header = document.querySelector('header');
         const bread = document.getElementById('breadcrumb');
@@ -736,11 +755,9 @@
 
         if (!header || !bread) return;
 
-        // Stick Breadcrumb directly under header
         const headerH = header.offsetHeight;
         bread.style.top = `${headerH}px`;
 
-        // We only need to adjust toolbar and group headers if the list is visible
         if (views.list.classList.contains('active')) {
             const breadH = bread.offsetHeight;
             toolbar.style.top = `${headerH + breadH}px`;
@@ -748,14 +765,12 @@
             const toolH = toolbar.offsetHeight;
             const groupHeaders = document.querySelectorAll('.group-header');
             
-            // Subtracted 1px to close any visual sub-pixel gaps between sticky boundaries
             groupHeaders.forEach(gh => {
                 gh.style.top = `${headerH + breadH + toolH - 1}px`;
             });
         }
     }
 
-    // Attach resize listener to keep heights accurate when device rotates or resizes
     window.addEventListener('resize', updateStickyOffsets);
 
     function showView(name) {
@@ -763,8 +778,6 @@
         views[name].classList.add('active');
         updateBreadcrumb();
         window.scrollTo({ top: 0, behavior: 'smooth' });
-        
-        // Let the DOM render the new height metrics before firing sticky offset calculation
         setTimeout(updateStickyOffsets, 50);
     }
 
@@ -838,11 +851,20 @@
         listTitle.textContent = sub.title;
         listGrid.innerHTML    = '';
 
+        // ── Syllabus button: notes only ──
         if (currentCategory === 'notes' && sub.syllabus) {
             topSyllabusBtn.style.display = 'inline-flex';
             topSyllabusBtn.onclick = () => openPDF(sub.syllabus, '📑 Syllabus');
         } else {
             topSyllabusBtn.style.display = 'none';
+        }
+
+        // ── Important Questions button: PYQs + WBP only ──
+        if (currentCategory === 'pyqs' && sub.impQ) {
+            topImpQBtn.style.display = 'inline-flex';
+            topImpQBtn.onclick = () => window.open(sub.impQ, '_blank');
+        } else {
+            topImpQBtn.style.display = 'none';
         }
 
         if (!files || files.length === 0) {
